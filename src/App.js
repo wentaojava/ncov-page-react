@@ -11,21 +11,51 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.initalECharts();
+        var confirmedCount;//确诊人数
+        var suspectedCount;//疑似人数
+        var curedCount;//治愈人数
+        var deadCount;//死亡人数
+        var proinceData;//省份信息
+        fetch('/api/viewData/getDataToday', {
+            method: 'GET',
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *client
+            //body: JSON.stringify(data) // body data type must match "Content-Type" header
+        }).then((response) => response.json())
+            .then((result) => {
+                if ('10000' === result.header.code) {
+                    var data = result.body;
+                    confirmedCount = data.confirmedCount;
+                    suspectedCount = data.suspectedCount;
+                    deadCount = data.deadCount;
+                    curedCount = data.curedCount;
+                    proinceData = data.areaDataList;
+                    this.initalECharts(proinceData);
+                } else {
+                    alert(result.header.message);
+                }
+                console.log('Success:', result.header);
+                console.log('Success:', result.body);
+            })
+            .catch((error) => {
+                alert(error);
+            });
     }
 
-    initalECharts() {
+    initalECharts(proinceData) {
         var colors = [
             ["#1DE9B6", "#F46E36", "#04B9FF", "#5DBD32", "#FFC809", "#FB95D5", "#BDA29A", "#6E7074", "#546570", "#C4CCD3"],
             ["#37A2DA", "#67E0E3", "#32C5E9", "#9FE6B8", "#FFDB5C", "#FF9F7F", "#FB7293", "#E062AE", "#E690D1", "#E7BCF3", "#9D96F5", "#8378EA", "#8378EA"],
             ["#DD6B66", "#759AA0", "#E69D87", "#8DC1A9", "#EA7E53", "#EEDD78", "#73A373", "#73B9BC", "#7289AB", "#91CA8C", "#F49F42"],
         ];
-        var colorIndex = 0;
-
-        var mapData = [
-            []
-        ];
-
+        var mapData = [[]];
         for (var key in geoCoordMap) {
             mapData[0].push({
                 "name": key,
@@ -52,9 +82,7 @@ class App extends Component {
             },
             baseOption: {
                 geo: {
-
                     map: 'china',
-
                     /*调整地图位置*/
                     center: [113.83531246, 34.0267395887],
                     /*控制鼠标放上去是否显示省份*/
@@ -95,7 +123,6 @@ class App extends Component {
                 },
             },
             options: []
-
         };
         optionXyMap01.options.push({
             backgroundColor: '#051b4a',
