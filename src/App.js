@@ -3,6 +3,8 @@ import echarts from 'echarts';
 import 'echarts/map/js/china';
 import geoJson from 'echarts/map/json/china.json';
 import {geoCoordMap} from "./geo";
+import {Alert, Spin} from 'antd';
+import "antd/dist/antd.css";
 
 class App extends Component {
     constructor(props) {
@@ -11,11 +13,12 @@ class App extends Component {
     }
 
     componentDidMount() {
-        var confirmedCount;//确诊人数
-        var suspectedCount;//疑似人数
-        var curedCount;//治愈人数
-        var deadCount;//死亡人数
-        var proinceData;//省份信息
+
+        /* var confirmedCount;//确诊人数
+         var suspectedCount;//疑似人数
+         var curedCount;//治愈人数
+         var deadCount;//死亡人数
+         var proinceData;//省份信息*/
         fetch('/api/viewData/getDataToday', {
             method: 'GET',
             mode: 'cors', // no-cors, *cors, same-origin
@@ -32,12 +35,14 @@ class App extends Component {
             .then((result) => {
                 if ('10000' === result.header.code) {
                     var data = result.body;
-                    confirmedCount = data.confirmedCount;
-                    suspectedCount = data.suspectedCount;
-                    deadCount = data.deadCount;
-                    curedCount = data.curedCount;
-                    proinceData = data.areaDataList;
-                    this.initalECharts(proinceData);
+
+                    /*this.state.confirmedCount = data.confirmedCount;
+                    this.state.suspectedCount = data.suspectedCount;
+                    this.state.deadCount = data.deadCount;
+                    this.state.curedCount = data.curedCount;
+                    this.state.proinceData = data.areaDataList;*/
+
+                    this.initalECharts();
                 } else {
                     alert(result.header.message);
                 }
@@ -49,7 +54,7 @@ class App extends Component {
             });
     }
 
-    initalECharts(proinceData) {
+    initalECharts() {
         var colors = [
             ["#1DE9B6", "#F46E36", "#04B9FF", "#5DBD32", "#FFC809", "#FB95D5", "#BDA29A", "#6E7074", "#546570", "#C4CCD3"],
             ["#37A2DA", "#67E0E3", "#32C5E9", "#9FE6B8", "#FFDB5C", "#FF9F7F", "#FB7293", "#E062AE", "#E690D1", "#E7BCF3", "#9D96F5", "#8378EA", "#8378EA"],
@@ -206,7 +211,17 @@ class App extends Component {
     render() {
         return (
             <div className="chinaMap">
-                <div id="mainMap" style={{width: '100vm', height: '100vh'}}></div>
+                <div id='load'><Spin tip="Loading...">
+                    <Alert
+                        message="Alert message title"
+                        description="Further details about the context of this alert."
+                        type="info"
+                    />
+                </Spin></div>
+                <div>
+                    <span></span>
+                </div>
+                <div id="mainMap" style={{width: '100vm', height: '100vh', dispaly: 'none'}}></div>
             </div>
         );
     }
