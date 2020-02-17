@@ -9,7 +9,9 @@ import "antd/dist/antd.css";
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            loading: true
+        }
     }
 
     componentDidMount() {
@@ -35,13 +37,14 @@ class App extends Component {
             .then((result) => {
                 if ('10000' === result.header.code) {
                     var data = result.body;
-
-                    /*this.state.confirmedCount = data.confirmedCount;
-                    this.state.suspectedCount = data.suspectedCount;
-                    this.state.deadCount = data.deadCount;
-                    this.state.curedCount = data.curedCount;
-                    this.state.proinceData = data.areaDataList;*/
-
+                    this.setState({
+                        loading: false,
+                        confirmedCount: data.confirmedCount,
+                        suspectedCount: data.confirmedCount,
+                        deadCount: data.deadCount,
+                        curedCount: data.curedCount,
+                        proinceData: data.areaDataList,
+                    });
                     this.initalECharts();
                 } else {
                     alert(result.header.message);
@@ -210,19 +213,26 @@ class App extends Component {
 
     render() {
         return (
-            <div className="chinaMap">
-                <div id='load'><Spin tip="Loading...">
-                    <Alert
-                        message="Alert message title"
-                        description="Further details about the context of this alert."
-                        type="info"
-                    />
-                </Spin></div>
-                <div>
-                    <span></span>
-                </div>
-                <div id="mainMap" style={{width: '100vm', height: '100vh', dispaly: 'none'}}></div>
-            </div>
+            <>
+                {this.state.loading ? (
+                    <div id='load'>
+                        <Spin tip="Loading..." size="large" style={{width: '100vm', height: '100vh'}}>
+                            <Alert
+                                message="请求后端数据中"
+                                description="服务器处理较慢，后期会优化"
+                                type="info"
+                                style={{width: '100vm', height: '100vh', textAlign: 'center'}}
+                            />
+                        </Spin></div>
+                ) : (
+                    <div className="chinaMap" style={{background: '#051b4a'}}>
+                        <div id="mainMap" style={{width: '100vm', height: '100vh'}}>
+                        </div>
+                    </div>
+
+
+                )}
+            </>
         );
     }
 }
