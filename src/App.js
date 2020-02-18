@@ -104,7 +104,7 @@ class App extends Component {
                 geo: {
                     map: 'china',
                     /*调整地图位置*/
-                    center: [113.83531246, 34.0267395887],
+                    center: [150, 35],
                     /*控制鼠标放上去是否显示省份*/
                     label: {
                         emphasis: {
