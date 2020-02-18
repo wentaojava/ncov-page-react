@@ -282,7 +282,7 @@ class App extends Component {
                                     <Card bordered={false} headStyle={{background: '#051b4a'}}
                                           bodyStyle={{background: '#051b4a'}}>
                                         <Card.Grid style={{
-                                            width: '15%',
+                                            width: 'auto',
                                             height: '100px',
                                             textAlign: 'center',
                                             marginLeft: '10px',
@@ -297,7 +297,7 @@ class App extends Component {
                                                 <CountUp start={0} end={this.state.currentConfirmedCount}/>人</span>
                                         </Card.Grid>
                                         <Card.Grid style={{
-                                            width: '18%',
+                                            width: 'auto',
                                             height: '100px',
                                             textAlign: 'center',
                                             marginLeft: '5%',
@@ -314,7 +314,7 @@ class App extends Component {
                                             }}>python未爬取到该数据，后期想办法添加</span>
                                         </Card.Grid>
                                         <Card.Grid style={{
-                                            width: '15%',
+                                            width: 'auto',
                                             height: '100px',
                                             textAlign: 'center',
                                             marginLeft: '5%',
@@ -327,7 +327,7 @@ class App extends Component {
                                             </h2>
                                         </Card.Grid>
                                         <Card.Grid style={{
-                                            width: '15%',
+                                            width: 'auto',
                                             height: '100px',
                                             textAlign: 'center',
                                             marginLeft: '5%',
@@ -342,10 +342,13 @@ class App extends Component {
                                     </Card>
                                 </div>
                             </Header>
-                            <Content style={{background: '#051b4a'}}>
+                            <Content style={{
+                                background: '#051b4a',
+                                width: this.state.deskDivWidth,
+                                height: this.state.deskHeight
+                            }}>
                                 <div id="mainMap" style={{width: '100%', height: '100%'}}></div>
                             </Content>
-                            <Footer style={{background: '#051b4a'}}>Footer</Footer>
                         </Layout>
                     </div>
 
