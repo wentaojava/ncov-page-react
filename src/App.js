@@ -44,9 +44,8 @@ class App extends Component {
                         suspectedCount: data.suspectedCount,//疑似人数
                         deadCount: data.deadCount,//死亡人数
                         curedCount: data.curedCount,//治愈人数
-                        proinceData: data.areaDataList,//省份信息
                     });
-                    this.initalECharts();
+                    this.initalECharts(data.areaDataList);
                 } else {
                     alert(result.header.message);
                 }
@@ -69,7 +68,7 @@ class App extends Component {
         });
     }
 
-    initalECharts() {
+    initalECharts(areaDataList) {
         var colors = [
             ["#1DE9B6", "#F46E36", "#04B9FF", "#5DBD32", "#FFC809", "#FB95D5", "#BDA29A", "#6E7074", "#546570", "#C4CCD3"],
             ["#37A2DA", "#67E0E3", "#32C5E9", "#9FE6B8", "#FFDB5C", "#FF9F7F", "#FB7293", "#E062AE", "#E690D1", "#E7BCF3", "#9D96F5", "#8378EA", "#8378EA"],
@@ -95,6 +94,14 @@ class App extends Component {
                 }
             }
             return res;
+        };
+        var showDataByProince = function (data) {
+            for (var i = 0; i < areaDataList.length; i++) {
+                var name = areaDataList[i].provinceShortName;
+                if (data === name) {
+                    return areaDataList[i].confirmedCount;
+                }
+            }
         };
         const optionXyMap01 = {
             timeline: {
@@ -155,6 +162,12 @@ class App extends Component {
                     fontSize: 30
                 }
             }],
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    return params.name + '<br/>' + '确诊人数： ' + showDataByProince(params.name);
+                }
+            },
             series: [
                 //未知作用
                 {
