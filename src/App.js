@@ -3,7 +3,7 @@ import echarts from 'echarts';
 import 'echarts/map/js/china';
 import geoJson from 'echarts/map/json/china.json';
 import {geoCoordMap} from "./geo";
-import {Alert, Card, Layout, Spin} from 'antd';
+import {Alert, Card, Col, Layout, Row, Spin} from 'antd';
 import "antd/dist/antd.css";
 import CountUp from 'react-countup';
 import './global.less';
@@ -132,8 +132,9 @@ class App extends Component {
             baseOption: {
                 geo: {
                     map: 'china',
+                    left: "50px",
                     /*调整地图位置*/
-                    center: [150, 35],
+                    center: [100, 32],
                     /*控制鼠标放上去是否显示省份*/
                     label: {
                         emphasis: {
@@ -256,6 +257,7 @@ class App extends Component {
         };
         const myChart = echarts.init(document.getElementById('mainMap'));
         myChart.setOption(optionXyMap01);
+        myChart.resize();
     }
 
     render() {
@@ -346,7 +348,22 @@ class App extends Component {
                                 width: this.state.deskDivWidth,
                                 height: this.state.deskHeight
                             }}>
-                                <div id="mainMap" style={{width: '100%', height: '100%'}}></div>
+
+                                <Row style={{
+                                    background: '#051b4a',
+                                    width: this.state.deskDivWidth,
+                                    height: this.state.deskHeight
+                                }}>
+                                    <Col style={{
+                                        background: '#051b4a',
+                                        width: this.state.deskDivWidth / 2 - 10,
+                                        height: this.state.deskHeight
+                                    }}>
+                                        <div id="mainMap" style={{width: '100%', height: '100%',}}></div>
+                                    </Col>
+
+                                </Row>
+
                             </Content>
                         </Layout>
                     </div>
