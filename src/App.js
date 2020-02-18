@@ -171,90 +171,89 @@ class App extends Component {
                     }
                 },
             },
-            options: []
-        };
-        optionXyMap01.options.push({
-            backgroundColor: '#051b4a',
-            title: [{
-                id: 'statistic',
-                text: "",
-                top: '2%',
-                textStyle: {
-                    color: '#fff',
-                    fontSize: 30
-                }
-            }],
-            tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                    return params.name + '<br/>' + '确诊人数： ' + showDataByProince(params.name);
-                }
-            },
-            series: [
-                //未知作用
-                {
-                    //文字和标志
-                    name: 'light',
-                    type: 'scatter',
-                    coordinateSystem: 'geo',
-                    data: convertData(mapData[0]),
-
+            options: [{
+                backgroundColor: '#051b4a',
+                title: [{
+                    id: 'statistic',
+                    text: "",
+                    top: '2%',
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 30
+                    }
+                }],
+                tooltip: {
+                    trigger: 'item',
+                    formatter: function (params) {
+                        return params.name + '<br/>' + '确诊人数： ' + showDataByProince(params.name);
+                    }
                 },
-                //地图？
-                {
-                    type: 'map',
-                    map: 'china',
-                    geoIndex: 0,
-                    aspectScale: 1, //长宽比
-                    showLegendSymbol: false, // 存在legend时显示
-                    label: {
-                        normal: {
-                            show: false
+                series: [
+                    //未知作用
+                    {
+                        //文字和标志
+                        name: 'light',
+                        type: 'scatter',
+                        coordinateSystem: 'geo',
+                        data: convertData(mapData[0]),
+
+                    },
+                    //地图？
+                    {
+                        type: 'map',
+                        map: 'china',
+                        geoIndex: 0,
+                        aspectScale: 1, //长宽比
+                        showLegendSymbol: false, // 存在legend时显示
+                        label: {
+                            normal: {
+                                show: false
+                            },
+                            emphasis: {
+                                show: false,
+                                textStyle: {
+                                    color: '#fff'
+                                }
+                            }
                         },
-                        emphasis: {
-                            show: false,
-                            textStyle: {
-                                color: '#fff'
+                        animation: false,
+                        data: convertData(mapData[0])
+                    },
+                    //地图点的动画效果
+                    {
+                        //  name: 'Top 5',
+                        type: 'effectScatter',
+                        coordinateSystem: 'geo',
+                        data: convertData(mapData[0]),
+                        symbolSize: function (val) {
+                            return val[2] / 10;
+                        },
+                        showEffectOn: 'render',
+                        rippleEffect: {
+                            brushType: 'stroke'
+                        },
+                        label: {
+                            normal: {
+                                formatter: '{b}',
+                                position: 'right',
+                                show: true
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                color: function (params) {
+                                    return makeItemColor(params.name);
+                                },
+                                shadowBlur: 10,
+                                shadowColor: "#F46E36"
                             }
                         }
-                    },
-                    animation: false,
-                    data: convertData(mapData[0])
-                },
-                //地图点的动画效果
-                {
-                    //  name: 'Top 5',
-                    type: 'effectScatter',
-                    coordinateSystem: 'geo',
-                    data: convertData(mapData[0]),
-                    symbolSize: function (val) {
-                        return val[2] / 10;
-                    },
-                    showEffectOn: 'render',
-                    rippleEffect: {
-                        brushType: 'stroke'
-                    },
-                    label: {
-                        normal: {
-                            formatter: '{b}',
-                            position: 'right',
-                            show: true
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: function (params) {
-                                return makeItemColor(params.name);
-                            },
-                            shadowBlur: 10,
-                            shadowColor: "#F46E36"
-                        }
                     }
-                }
 
 
-            ]
-        });
+                ]
+            }]
+        };
         const myChart = echarts.init(document.getElementById('mainMap'));
         myChart.setOption(optionXyMap01);
     }
