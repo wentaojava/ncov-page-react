@@ -69,11 +69,8 @@ class App extends Component {
     }
 
     initalECharts(areaDataList) {
-        var colors = [
-            ["#1DE9B6", "#F46E36", "#04B9FF", "#5DBD32", "#FFC809", "#FB95D5", "#BDA29A", "#6E7074", "#546570", "#C4CCD3"],
-            ["#37A2DA", "#67E0E3", "#32C5E9", "#9FE6B8", "#FFDB5C", "#FF9F7F", "#FB7293", "#E062AE", "#E690D1", "#E7BCF3", "#9D96F5", "#8378EA", "#8378EA"],
-            ["#DD6B66", "#759AA0", "#E69D87", "#8DC1A9", "#EA7E53", "#EEDD78", "#73A373", "#73B9BC", "#7289AB", "#91CA8C", "#F49F42"],
-        ];
+
+        var colors = ["#22e9b3", "#4233f4", "#ff4ff3", "#bd5d2b", "#ff3021"];
         var mapData = [[]];
         for (var key in geoCoordMap) {
             mapData[0].push({
@@ -95,11 +92,36 @@ class App extends Component {
             }
             return res;
         };
+        /**
+         *用于地图鼠标悬停的显示
+         */
         var showDataByProince = function (data) {
             for (var i = 0; i < areaDataList.length; i++) {
                 var name = areaDataList[i].provinceShortName;
                 if (data === name) {
                     return areaDataList[i].confirmedCount;
+                }
+            }
+        };
+
+        /**
+         *用于各省份地图点显示
+         */
+        var makeItemColor = function (data) {
+            for (var i = 0; i < areaDataList.length; i++) {
+                var name = areaDataList[i].provinceShortName;
+                if (data === name) {
+                    if (areaDataList[i].confirmedCount <= 99) {
+                        return colors[0];
+                    } else if (areaDataList[i].confirmedCount >= 100 && areaDataList[i].confirmedCount <= 499) {
+                        return colors[1];
+                    } else if (areaDataList[i].confirmedCount >= 500 && areaDataList[i].confirmedCount <= 999) {
+                        return colors[2];
+                    } else if (areaDataList[i].confirmedCount >= 1000 && areaDataList[i].confirmedCount <= 1999) {
+                        return colors[3];
+                    } else if (areaDataList[i].confirmedCount >= 20000) {
+                        return colors[4];
+                    }
                 }
             }
         };
@@ -221,7 +243,9 @@ class App extends Component {
                     },
                     itemStyle: {
                         normal: {
-                            color: "#F46E36",
+                            color: function (params) {
+                                return makeItemColor(params.name);
+                            },
                             shadowBlur: 10,
                             shadowColor: "#F46E36"
                         }
