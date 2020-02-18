@@ -12,6 +12,19 @@
     "react-dom": "^16.12.0",
     "react-scripts": "3.4.0",
     "http-proxy-middleware": "^0.20.0",
+    "@alifd/next": "^1.x",
+    "@alifd/theme-1": "^0.0.6",
+    "@antv/data-set": "^0.10.1",
+    "@antv/g2-brush": "^0.0.2",
+    "@icedesign/container": "^1.x",
+    "@icedesign/foundation-symbol": "^1.0.1",
+    "@icedesign/layout": "^1.x",
+    "@icedesign/theme": "^1.x",
+    "bizcharts": "^3.4.3",
+    "classnames": "^2.2.5",
+    "moment": "^2.24.0",
+    "prop-types": "^15.5.8",
+    "react-countup": "^4.3.3",
     "antd": "^3.26.11"
   },
   "scripts": {
@@ -34,5 +47,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ice-lab/react-materials/tree/master/scaffolds/ice-finance-dashboard"
   }
 }

@@ -3,24 +3,24 @@ import echarts from 'echarts';
 import 'echarts/map/js/china';
 import geoJson from 'echarts/map/json/china.json';
 import {geoCoordMap} from "./geo";
-import {Alert, Spin} from 'antd';
+import {Alert, Card, Layout, Spin} from 'antd';
 import "antd/dist/antd.css";
+import CountUp from 'react-countup';
+import './global.less';
 
 class App extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true,
+            deskDivWidth: document.body.clientWidth,
+            deskHeight: document.body.clientHeight,
         }
     }
 
     componentDidMount() {
-
-        /* var confirmedCount;//确诊人数
-         var suspectedCount;//疑似人数
-         var curedCount;//治愈人数
-         var deadCount;//死亡人数
-         var proinceData;//省份信息*/
+        window.addEventListener('resize', this.handleSize);
         fetch('/api/viewData/getDataToday', {
             method: 'GET',
             mode: 'cors', // no-cors, *cors, same-origin
@@ -39,22 +39,34 @@ class App extends Component {
                     var data = result.body;
                     this.setState({
                         loading: false,
-                        confirmedCount: data.confirmedCount,
-                        suspectedCount: data.confirmedCount,
-                        deadCount: data.deadCount,
-                        curedCount: data.curedCount,
-                        proinceData: data.areaDataList,
+                        confirmedCount: data.confirmedCount,//确诊人数
+                        currentConfirmedCount: data.currentConfirmedCount,//现存确诊人数
+                        suspectedCount: data.suspectedCount,//疑似人数
+                        deadCount: data.deadCount,//死亡人数
+                        curedCount: data.curedCount,//治愈人数
+                        proinceData: data.areaDataList,//省份信息
                     });
                     this.initalECharts();
                 } else {
                     alert(result.header.message);
                 }
-                console.log('Success:', result.header);
-                console.log('Success:', result.body);
             })
             .catch((error) => {
                 alert(error);
             });
+    }
+
+    componentWillUnmount() {
+        // 移除监听事件
+        window.removeEventListener('resize', this.handleSize);
+    }
+
+    // 自适应浏览器的高度
+    handleSize = () => {
+        this.setState({
+            deskDivWidth: document.body.clientWidth,
+            deskHeight: document.body.clientHeight,
+        });
     }
 
     initalECharts() {
@@ -136,8 +148,7 @@ class App extends Component {
             backgroundColor: '#051b4a',
             title: [{
                 id: 'statistic',
-                text: "疫情地图",
-                left: '30%',
+                text: "",
                 top: '2%',
                 textStyle: {
                     color: '#fff',
@@ -159,7 +170,7 @@ class App extends Component {
                     type: 'map',
                     map: 'china',
                     geoIndex: 0,
-                    aspectScale: 0.75, //长宽比
+                    aspectScale: 1, //长宽比
                     showLegendSymbol: false, // 存在legend时显示
                     label: {
                         normal: {
@@ -212,6 +223,7 @@ class App extends Component {
     }
 
     render() {
+        const {Header, Footer, Content} = Layout;
         return (
             <>
                 {this.state.loading ? (
@@ -225,11 +237,80 @@ class App extends Component {
                             />
                         </Spin></div>
                 ) : (
-                    <div className="chinaMap" style={{background: '#051b4a'}}>
-                        <div id="mainMap" style={{width: '100vm', height: '100vh'}}>
-                        </div>
+                    <div className="chinaMap" style={{width: this.state.deskDivWidth, height: this.state.deskHeight}}>
+                        <Layout style={{background: '#051b4a', height: this.state.deskHeight}}>
+                            <Header style={{background: '#051b4a', height: 'auto'}}>
+                                <div style={{marginBottom: '50px', background: '#051b4a'}}>
+                                    <h1 style={{color: 'white', fontSize: 'xx-large'}}>今日全国疫情数据</h1>
+                                    <Card bordered={false} headStyle={{background: '#051b4a'}}
+                                          bodyStyle={{background: '#051b4a'}}>
+                                        <Card.Grid style={{
+                                            width: '15%',
+                                            height: '100px',
+                                            textAlign: 'center',
+                                            marginLeft: '10px',
+                                            background: '#051b4a'
+                                        }}>
+                                            <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 确诊人数：
+                                                <span style={{fontFamily: 'cursive', color: 'cornflowerblue'}}>
+                                         <CountUp start={0} end={this.state.confirmedCount}/>人
+                                        </span>
+                                            </h2>
+                                            <span style={{fontFamily: 'cursive', color: '#fff'}}>现存确诊人数：
+                                                <CountUp start={0} end={this.state.currentConfirmedCount}/>人</span>
+                                        </Card.Grid>
+                                        <Card.Grid style={{
+                                            width: '18%',
+                                            height: '100px',
+                                            textAlign: 'center',
+                                            marginLeft: '5%',
+                                            background: '#051b4a'
+                                        }}>
+                                            <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 疑似人数：
+                                                <span style={{fontFamily: 'cursive', color: 'aqua'}}>
+                                         <CountUp start={0} end={this.state.suspectedCount}/>人
+                                        </span>
+                                            </h2>
+                                            <span style={{
+                                                fontFamily: 'cursive',
+                                                color: '#fff'
+                                            }}>python未爬取到该数据，后期想办法添加</span>
+                                        </Card.Grid>
+                                        <Card.Grid style={{
+                                            width: '15%',
+                                            height: '100px',
+                                            textAlign: 'center',
+                                            marginLeft: '5%',
+                                            background: '#051b4a'
+                                        }}>
+                                            <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 治愈人数：
+                                                <span style={{fontFamily: 'cursive', color: 'green'}}>
+                                         <CountUp start={0} end={this.state.curedCount}/>人
+                                        </span>
+                                            </h2>
+                                        </Card.Grid>
+                                        <Card.Grid style={{
+                                            width: '15%',
+                                            height: '100px',
+                                            textAlign: 'center',
+                                            marginLeft: '5%',
+                                            background: '#051b4a'
+                                        }}>
+                                            <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 死亡人数：
+                                                <span style={{fontFamily: 'cursive', color: 'blueviolet'}}>
+                                         <CountUp start={0} end={this.state.deadCount}/>人
+                                        </span>
+                                            </h2>
+                                        </Card.Grid>
+                                    </Card>
+                                </div>
+                            </Header>
+                            <Content style={{background: '#051b4a'}}>
+                                <div id="mainMap" style={{width: '100%', height: '100%'}}></div>
+                            </Content>
+                            <Footer style={{background: '#051b4a'}}>Footer</Footer>
+                        </Layout>
                     </div>
-
 
                 )}
             </>
