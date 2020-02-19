@@ -8,6 +8,8 @@ import "antd/dist/antd.css";
 import CountUp from 'react-countup';
 import './global.less';
 
+
+const dataSource = [];
 class App extends Component {
     constructor(props) {
         super(props);
@@ -15,7 +17,7 @@ class App extends Component {
             loading: true,
             deskDivWidth: document.body.clientWidth,
             deskHeight: document.body.clientHeight,
-            cityDataList: []
+            hasData: false,
         }
     }
 
@@ -99,6 +101,7 @@ class App extends Component {
             }
             return res;
         };
+
         /**
          *用于地图鼠标悬停的显示
          */
@@ -282,7 +285,6 @@ class App extends Component {
      *下拉框选择触发函数
      */
     showCityInfo(value) {
-        const {state} = this.props.state;
         var data = {"header": {}, "body": {"id": value}};
         fetch('/api/viewData/getCityDataTodayByMongodbId', {
             method: 'POST',
@@ -291,7 +293,6 @@ class App extends Component {
             credentials: 'same-origin', // include, *same-origin, omit
             headers: {
                 'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
             },
             redirect: 'follow', // manual, *follow, error
             referrerPolicy: 'no-referrer', // no-referrer, *client
@@ -300,8 +301,20 @@ class App extends Component {
             .then((result) => {
                 if ('10000' === result.header.code) {
                     var data = result.body;
-                    console.log(state);
-                    state.cityDataList = data;//城市信息
+                    dataSource.length = 0;
+                    for (var i = 0; i < data.length; i++) {
+                        dataSource.push({
+                            key: i,
+                            cityName: data[i].cityName,
+                            confirmedCount: data[i].confirmedCount,
+                            suspectedCount: data[i].suspectedCount,
+                            curedCount: data[i].curedCount,
+                            deadCount: data[i].deadCount,
+                        });//城市信息
+                    }
+                    this.setState({
+                        hasData: true,
+                    });
                 } else {
                     alert("获取对应省份的城市疫情信息失败，错误信息=" + result.header.message);
                 }
@@ -311,6 +324,7 @@ class App extends Component {
             });
 
     }
+
     render() {
         const {Header, Footer, Content} = Layout;
         const columns = [
@@ -340,7 +354,6 @@ class App extends Component {
                 key: 'deadCount',
             },
         ];
-        const {state} = this;
 
         return (
             <>
@@ -439,7 +452,7 @@ class App extends Component {
                                         style={{width: 200, marginLeft: '10px'}}
                                         placeholder="Select a province"
                                         optionFilterProp="children"
-                                        onChange={this.showCityInfo}
+                                        onChange={this.showCityInfo.bind(this)}
                                         /* onFocus={}
                                         onBlur={}
                                         onSearch={}*/
@@ -454,7 +467,8 @@ class App extends Component {
                                     </Select>
                                 </div>
                                 <div style={{marginTop: '10px'}}>
-                                    <Table border dataSource={state.cityDataList} columns={columns}/>
+                                    <Table border dataSource={this.state.hasData ? dataSource : null}
+                                           columns={columns}/>
                                 </div>
                             </Content>
                             <Footer style={{marginTop: '20px'}}>
