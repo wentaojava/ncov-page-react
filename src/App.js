@@ -364,7 +364,7 @@ class App extends Component {
                                     </Row>
                                 </div>
                                 <Divider style={{color: '#fff'}}></Divider>
-                                <div id="mainMap" style={{width: '100vm', height: '100vh', marginTop: '20px'}}></div>
+                                <div id="mainMap" style={{width: '100vm', height: '70vh', marginTop: '20px'}}></div>
                                 <Divider style={{color: '#fff'}}></Divider>
 
                                 <Select
@@ -387,7 +387,7 @@ class App extends Component {
 
                             </Content>
                             <Footer style={{marginTop: '20px'}}>
-
+                                @wentao
                             </Footer>
                         </Layout>
                     </div>
