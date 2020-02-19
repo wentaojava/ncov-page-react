@@ -3,7 +3,7 @@ import echarts from 'echarts';
 import 'echarts/map/js/china';
 import geoJson from 'echarts/map/json/china.json';
 import {geoCoordMap} from "./geo";
-import {Alert, Card, Col, Layout, Row, Spin} from 'antd';
+import {Alert, Button, Col, Divider, Layout, Option, Row, Select, Spin} from 'antd';
 import "antd/dist/antd.css";
 import CountUp from 'react-countup';
 import './global.less';
@@ -132,9 +132,9 @@ class App extends Component {
             baseOption: {
                 geo: {
                     map: 'china',
-                    left: "50px",
+                    left: "150px",
                     /*调整地图位置*/
-                    center: [100, 32],
+                    center: [90, 32],
                     /*控制鼠标放上去是否显示省份*/
                     label: {
                         emphasis: {
@@ -173,16 +173,27 @@ class App extends Component {
                 },
             },
             options: [{
-                backgroundColor: '#051b4a',
+
                 title: [{
                     id: 'statistic',
-                    text: "",
+                    text: "疫情地图",
                     top: '2%',
                     textStyle: {
-                        color: '#fff',
+                        color: 'blue',
                         fontSize: 30
                     }
-                }],
+                },
+                    {
+                        id: '',
+                        text: "鼠标放置省份名称或区域可显示确诊人数",
+                        left: '15%',
+                        top: '3%',
+                        textStyle: {
+                            color: '#000',
+                            fontSize: 10
+                        }
+                    }
+                ],
                 tooltip: {
                     trigger: 'item',
                     formatter: function (params) {
@@ -262,6 +273,7 @@ class App extends Component {
 
     render() {
         const {Header, Footer, Content} = Layout;
+        const {Option} = Select;
         return (
             <>
                 {this.state.loading ? (
@@ -275,96 +287,108 @@ class App extends Component {
                             />
                         </Spin></div>
                 ) : (
-                    <div className="chinaMap" style={{width: this.state.deskDivWidth, height: this.state.deskHeight}}>
-                        <Layout style={{background: '#051b4a', height: this.state.deskHeight}}>
-                            <Header style={{background: '#051b4a', height: 'auto'}}>
-                                <div style={{marginBottom: '50px', background: '#051b4a'}}>
-                                    <h1 style={{color: 'white', fontSize: 'xx-large'}}>今日全国疫情数据</h1>
-                                    <Card bordered={false} headStyle={{background: '#051b4a'}}
-                                          bodyStyle={{background: '#051b4a'}}>
-                                        <Card.Grid style={{
-                                            width: 'auto',
-                                            height: '100px',
-                                            textAlign: 'center',
-                                            marginLeft: '10px',
-                                            background: '#051b4a'
+                    <div>
+                        <Layout style={{
+                            width: this.state.deskDivWidth / 10 * 8,
+                            height: '100%',
+                            marginLeft: this.state.deskDivWidth / 10
+                        }}>
+                            <Header style={{height: this.state.deskHeight / 10}}>
+                                <h1 style={{color: 'white', height: '100%', fontSize: 'xx-large'}}>
+                                    今日全国疫情数据
+                                </h1>
+                            </Header>
+                            <Content style={{marginTop: '20px'}}>
+                                <span style={{
+                                    marginLeft: '10%',
+                                    fontSize: 'small',
+                                    color: 'red'
+                                }}>疑似人数数值，python没有爬取到，正在想办法获取</span>
+                                <span style={{marginLeft: '10%', fontSize: 'small'}}>数据来源于丁香园，与支付宝数据有出入</span>
+                                <span style={{marginLeft: '10%', fontSize: 'small'}}>感谢张学兵（前端大佬）给与的技术支持;</span>
+                                <Divider style={{color: '#fff'}}></Divider>
+                                <div style={{height: 'auto', marginTop: '20px'}}>
+                                    <Row>
+                                        <Col span={6}> <Button size={"large"} type={"primary"} style={{
+                                            height: '75px',
+                                            marginLeft: '1%',
+                                            marginTop: '1px',
+                                            textAlign: 'left'
                                         }}>
                                             <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 确诊人数：
-                                                <span style={{fontFamily: 'cursive', color: 'cornflowerblue'}}>
-                                         <CountUp start={0} end={this.state.confirmedCount}/>人
-                                        </span>
+                                                <span style={{fontFamily: 'cursive', color: 'brown'}}>
+                                         <CountUp start={0} end={this.state.confirmedCount}/> </span>
                                             </h2>
                                             <span style={{fontFamily: 'cursive', color: '#fff'}}>现存确诊人数：
-                                                <CountUp start={0} end={this.state.currentConfirmedCount}/>人</span>
-                                        </Card.Grid>
-                                        <Card.Grid style={{
-                                            width: 'auto',
-                                            height: '100px',
-                                            textAlign: 'center',
-                                            marginLeft: '5%',
-                                            background: '#051b4a'
+                                            <span style={{fontFamily: 'cursive', color: 'brown'}}>
+                                            <CountUp start={0} end={this.state.currentConfirmedCount}/> </span>
+                                        </span>
+                                        </Button>
+                                        </Col>
+                                        <Col span={6}><Button size={"large"} type={"primary"} style={{
+                                            height: '75px',
+                                            marginLeft: '1%',
+                                            marginTop: '1px',
+                                            textAlign: 'left'
                                         }}>
                                             <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 疑似人数：
-                                                <span style={{fontFamily: 'cursive', color: 'aqua'}}>
-                                         <CountUp start={0} end={this.state.suspectedCount}/>人
-                                        </span>
+                                                <span style={{fontFamily: 'cursive', color: 'brown'}}>
+                                         <CountUp start={0} end={this.state.suspectedCount}/> </span>
                                             </h2>
-                                            <span style={{
-                                                fontFamily: 'cursive',
-                                                color: '#fff'
-                                            }}>python未爬取到该数据，后期想办法添加</span>
-                                        </Card.Grid>
-                                        <Card.Grid style={{
-                                            width: 'auto',
-                                            height: '100px',
-                                            textAlign: 'center',
-                                            marginLeft: '5%',
-                                            background: '#051b4a'
+                                        </Button>
+                                        </Col>
+                                        <Col span={6}> <Button size={"large"} type={"primary"} style={{
+                                            height: '75px',
+                                            marginLeft: '1%',
+                                            marginTop: '1px',
+                                            textAlign: 'left'
                                         }}>
                                             <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 治愈人数：
                                                 <span style={{fontFamily: 'cursive', color: 'green'}}>
-                                         <CountUp start={0} end={this.state.curedCount}/>人
-                                        </span>
+                                         <CountUp start={0} end={this.state.curedCount}/> </span>
                                             </h2>
-                                        </Card.Grid>
-                                        <Card.Grid style={{
-                                            width: 'auto',
-                                            height: '100px',
-                                            textAlign: 'center',
-                                            marginLeft: '5%',
-                                            background: '#051b4a'
+                                        </Button>
+                                        </Col>
+                                        <Col span={6}><Button size={"large"} type={"primary"} style={{
+                                            height: '75px',
+                                            marginLeft: '1%',
+                                            marginTop: '1px',
+                                            textAlign: 'left'
                                         }}>
                                             <h2 style={{fontFamily: 'cursive', color: '#fff'}}> 死亡人数：
-                                                <span style={{fontFamily: 'cursive', color: 'blueviolet'}}>
-                                         <CountUp start={0} end={this.state.deadCount}/>人
-                                        </span>
+                                                <span style={{fontFamily: 'cursive', color: 'black'}}>
+                                         <CountUp start={0} end={this.state.deadCount}/> </span>
                                             </h2>
-                                        </Card.Grid>
-                                    </Card>
+                                        </Button>
+                                        </Col>
+                                    </Row>
                                 </div>
-                            </Header>
-                            <Content style={{
-                                background: '#051b4a',
-                                width: this.state.deskDivWidth,
-                                height: this.state.deskHeight
-                            }}>
+                                <Divider style={{color: '#fff'}}></Divider>
+                                <div id="mainMap" style={{width: '100vm', height: '100vh', marginTop: '20px'}}></div>
+                                <Divider style={{color: '#fff'}}></Divider>
 
-                                <Row style={{
-                                    background: '#051b4a',
-                                    width: this.state.deskDivWidth,
-                                    height: this.state.deskHeight
-                                }}>
-                                    <Col style={{
-                                        background: '#051b4a',
-                                        width: this.state.deskDivWidth / 2 - 10,
-                                        height: this.state.deskHeight
-                                    }}>
-                                        <div id="mainMap" style={{width: '100%', height: '100%',}}></div>
-                                    </Col>
-
-                                </Row>
+                                <Select
+                                    showSearch
+                                    style={{width: 200}}
+                                    placeholder="Select a person"
+                                    optionFilterProp="children"
+                                    /* onChange={}
+                                     onFocus={}
+                                     onBlur={}
+                                     onSearch={}*/
+                                    filterOption={(input, option) =>
+                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    <Option value="jack">Jack</Option>
+                                    <Option value="lucy">Lucy</Option>
+                                    <Option value="tom">Tom</Option>
+                                </Select>
 
                             </Content>
+                            <Footer style={{marginTop: '20px'}}>
+
+                            </Footer>
                         </Layout>
                     </div>
 
