@@ -3,24 +3,27 @@ import echarts from 'echarts';
 import 'echarts/map/js/china';
 import geoJson from 'echarts/map/json/china.json';
 import {geoCoordMap} from "./geo";
-import {Alert, Button, Col, Divider, Layout, Option, Row, Select, Spin} from 'antd';
+import {Alert, Button, Col, Divider, Layout, Option, Row, Select, Spin, Table} from 'antd';
 import "antd/dist/antd.css";
 import CountUp from 'react-countup';
 import './global.less';
 
 class App extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
             deskDivWidth: document.body.clientWidth,
             deskHeight: document.body.clientHeight,
+            cityDataList: []
         }
     }
 
     componentDidMount() {
         window.addEventListener('resize', this.handleSize);
+        /**
+         *获取今日疫情数据
+         */
         fetch('/api/viewData/getDataToday', {
             method: 'GET',
             mode: 'cors', // no-cors, *cors, same-origin
@@ -44,14 +47,15 @@ class App extends Component {
                         suspectedCount: data.suspectedCount,//疑似人数
                         deadCount: data.deadCount,//死亡人数
                         curedCount: data.curedCount,//治愈人数
+                        areaDataList: data.areaDataList,//用于下拉框赋值
                     });
                     this.initalECharts(data.areaDataList);
                 } else {
-                    alert(result.header.message);
+                    alert("获取今日疫情数据失败，错误信息=" + result.header.message);
                 }
             })
             .catch((error) => {
-                alert(error);
+                alert("获取今日疫情数据失败，错误信息=" + error);
             });
     }
 
@@ -66,8 +70,11 @@ class App extends Component {
             deskDivWidth: document.body.clientWidth,
             deskHeight: document.body.clientHeight,
         });
-    }
+    };
 
+    /**
+     *地图渲染
+     */
     initalECharts(areaDataList) {
 
         var colors = ["#22e9b3", "#4233f4", "#ff4ff3", "#bd5d2b", "#ff3021"];
@@ -271,9 +278,70 @@ class App extends Component {
         myChart.resize();
     }
 
+    /**
+     *下拉框选择触发函数
+     */
+    showCityInfo(value) {
+        const {state} = this.props.state;
+        var data = {"header": {}, "body": {"id": value}};
+        fetch('/api/viewData/getCityDataTodayByMongodbId', {
+            method: 'POST',
+            mode: 'cors', // no-cors, *cors, same-origin
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, *same-origin, omit
+            headers: {
+                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *client
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        }).then((response) => response.json())
+            .then((result) => {
+                if ('10000' === result.header.code) {
+                    var data = result.body;
+                    console.log(state);
+                    state.cityDataList = data;//城市信息
+                } else {
+                    alert("获取对应省份的城市疫情信息失败，错误信息=" + result.header.message);
+                }
+            })
+            .catch((error) => {
+                alert("获取对应省份的城市疫情信息失败，错误信息=" + error);
+            });
+
+    }
     render() {
         const {Header, Footer, Content} = Layout;
-        const {Option} = Select;
+        const columns = [
+            {
+                title: '地区',
+                dataIndex: 'cityName',
+                key: 'cityName',
+            },
+            {
+                title: '确诊人数',
+                dataIndex: 'confirmedCount',
+                key: 'confirmedCount',
+            },
+            {
+                title: '疑似人数(此数值未爬取成功)',
+                dataIndex: 'suspectedCount',
+                key: 'suspectedCount',
+            },
+            {
+                title: '治愈人数',
+                dataIndex: 'curedCount',
+                key: 'curedCount',
+            },
+            {
+                title: '死亡人数',
+                dataIndex: 'deadCount',
+                key: 'deadCount',
+            },
+        ];
+        const {state} = this;
+
         return (
             <>
                 {this.state.loading ? (
@@ -366,25 +434,28 @@ class App extends Component {
                                 <Divider style={{color: '#fff'}}></Divider>
                                 <div id="mainMap" style={{width: '100vm', height: '70vh', marginTop: '20px'}}></div>
                                 <Divider style={{color: '#fff'}}></Divider>
-
-                                <Select
-                                    showSearch
-                                    style={{width: 200}}
-                                    placeholder="Select a person"
-                                    optionFilterProp="children"
-                                    /* onChange={}
-                                     onFocus={}
-                                     onBlur={}
-                                     onSearch={}*/
-                                    filterOption={(input, option) =>
-                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    }
-                                >
-                                    <Option value="jack">Jack</Option>
-                                    <Option value="lucy">Lucy</Option>
-                                    <Option value="tom">Tom</Option>
-                                </Select>
-
+                                <div>
+                                    <Select
+                                        style={{width: 200, marginLeft: '10px'}}
+                                        placeholder="Select a province"
+                                        optionFilterProp="children"
+                                        onChange={this.showCityInfo}
+                                        /* onFocus={}
+                                        onBlur={}
+                                        onSearch={}*/
+                                        filterOption={(input, option) =>
+                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }>
+                                        {this.state.areaDataList.map(province => (
+                                            <Select.Option key={province.locationId} value={province.id}>
+                                                {province.provinceShortName}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </div>
+                                <div style={{marginTop: '10px'}}>
+                                    <Table border dataSource={state.cityDataList} columns={columns}/>
+                                </div>
                             </Content>
                             <Footer style={{marginTop: '20px'}}>
                                 @wentao
