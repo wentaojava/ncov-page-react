@@ -468,19 +468,18 @@ class App extends Component {
                                 <div id="mainMap" style={{width: '100vm', height: '70vh', marginTop: '20px'}}></div>
                                 <Divider style={{color: '#fff'}}></Divider>
                                 <div>
-                                    <Alert message="选择省份或自治区点击查询，查看有疫情数据的相关城市或地区" type="info"
+                                    <Alert message="选择省份或直接输入，点击查询，查看有疫情数据的相关城市或地区" type="info"
                                            style={{marginLeft: '10px', marginRight: '10px'}}/>
                                     <Select
-                                        style={{width: 200, marginLeft: '10px', marginTop: '10px'}}
-                                        placeholder="Select a province"
+                                        style={{width: 250, marginLeft: '10px', marginTop: '10px'}}
+                                        placeholder="Select or input a province"
                                         optionFilterProp="children"
                                         onChange={this.changeSelectedProince.bind(this)}
                                         /* onFocus={}
                                         onBlur={}
                                         onSearch={}*/
-                                        filterOption={(input, option) =>
-                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                        }>
+                                        showSearch={true}
+                                    >
                                         {this.state.areaDataList.map(province => (
                                             <Select.Option key={province.locationId} value={province.id}>
                                                 {province.provinceShortName}
