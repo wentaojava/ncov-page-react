@@ -400,10 +400,10 @@ class App extends Component {
                                     fontSize: 'small',
                                     color: 'red'
                                 }}>疑似人数数值，python没有爬取到，正在想办法获取</span>
-                                <span style={{marginLeft: '10%', fontSize: 'small'}}>数据来源于丁香园，与支付宝数据有出入</span>
+                                <span style={{marginLeft: '10%', fontSize: 'small'}}>数据来源于丁香园，与支付宝数据可能会有出入</span>
                                 <span style={{marginLeft: '10%', fontSize: 'small'}}>感谢张学兵（前端大佬）给与的技术支持;</span>
                                 <Divider style={{color: '#fff'}}></Divider>
-                                <div style={{height: 'auto', marginTop: '20px'}}>
+                                <div style={{height: 'auto', marginTop: '20px', marginLeft: '50px'}}>
                                     <Row>
                                         <Col span={6}> <Button size={"large"} type={"primary"} style={{
                                             height: '75px',
