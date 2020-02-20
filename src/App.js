@@ -189,6 +189,7 @@ class App extends Component {
                     id: 'statistic',
                     text: "疫情地图",
                     top: '2%',
+                    left: '5%',
                     textStyle: {
                         color: 'blue',
                         fontSize: 30
@@ -197,7 +198,7 @@ class App extends Component {
                     {
                         id: '',
                         text: "鼠标放置省份名称或区域可显示确诊人数",
-                        left: '15%',
+                        left: '20%',
                         top: '3%',
                         textStyle: {
                             color: '#000',
