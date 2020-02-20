@@ -7,6 +7,7 @@ import {Alert, Button, Col, Divider, Layout, Option, Row, Select, Spin, Table} f
 import "antd/dist/antd.css";
 import CountUp from 'react-countup';
 import './global.less';
+import './App.css';
 
 
 const dataSource = [];
@@ -287,18 +288,21 @@ class App extends Component {
      *查询按钮点击触发函数
      */
     showCityInfo() {
+        this.setState({
+            loadingTable: true,//表格加载标识
+        });
         var data = {"header": {}, "body": {"id": this.state.selectedValue}};
         fetch('/api/viewData/getCityDataTodayByMongodbId', {
             method: 'POST',
-            mode: 'cors', // no-cors, *cors, same-origin
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, *same-origin, omit
+            mode: 'cors',
+            cache: 'no-cache',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json'
             },
-            redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *client
-            body: JSON.stringify(data) // body data type must match "Content-Type" header
+            redirect: 'follow',
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify(data)
         }).then((response) => response.json())
             .then((result) => {
                 if ('10000' === result.header.code) {
@@ -316,6 +320,7 @@ class App extends Component {
                     }
                     this.setState({
                         hasData: true,
+                        loadingTable: false,
                     });
                 } else {
                     alert("获取对应省份的城市疫情信息失败，错误信息=" + result.header.message);
@@ -324,7 +329,6 @@ class App extends Component {
             .catch((error) => {
                 alert("获取对应省份的城市疫情信息失败，错误信息=" + error);
             });
-
     }
 
     /**
@@ -343,7 +347,7 @@ class App extends Component {
                 title: '地区',
                 dataIndex: 'cityName',
                 key: 'cityName',
-                align: 'center'
+                align: 'center',
             },
             {
                 title: '确诊人数',
@@ -487,9 +491,9 @@ class App extends Component {
                                             onClick={this.showCityInfo.bind(this)}>查询</Button>
                                 </div>
                                 <div style={{marginTop: '10px', marginLeft: '10px', marginRight: '10px'}}>
-                                    <Table border dataSource={this.state.hasData ? dataSource : null}
+                                    <Table dataSource={this.state.hasData ? dataSource : null}
                                            columns={columns} bordered={true} locale={{emptyText: "暂无数据"}}
-                                           pagination={{size: 'small'}}/>
+                                           pagination={{size: 'small'}} loading={this.state.loadingTable}/>
                                 </div>
                             </Content>
                             <Divider style={{color: '#fff'}}></Divider>

@@ -1,89 +1,13 @@
-.App {
-  text-align: center;
+.ant-table-thead > tr > th {
+    color: white;
+    background: #1890ff;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.ant-table {
+    color: #000;
+    background: white !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-global {
-    background-color: #051b4a;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.content {
-    color: #051b4a;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    transition: all 0.25s ease;
-}
-
-.title {
-    margin: 0 0 10px 0;
-    font-weight: bold;
-}
-
-.data {
-    display: flex;
-    margin: 10px 0;
-}
-
-.amount {
-    margin: 0 15px 0 0;
-    /*color: $color-data1-1;*/
-    font-size: 28px;
-    font-style: oblique;
-    color: cadetblue;
-}
-
-.percent {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 4px;
-    font-size: 12px;
-}
-
-.arrowIcon {
-    margin-left: 8px;
-}
-
-.footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-}
-
-.itemLabel {
-    color: #999;
-}
-
-.itemValue {
-    margin-top: 10px;
-    font-weight: bold;
-    font-size: 16px;
+.ant-table.border {
+    border-color: #1890ff;
 }
