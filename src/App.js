@@ -10,6 +10,7 @@ import './global.less';
 
 
 const dataSource = [];
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -282,10 +283,10 @@ class App extends Component {
     }
 
     /**
-     *下拉框选择触发函数
+     *查询按钮点击触发函数
      */
-    showCityInfo(value) {
-        var data = {"header": {}, "body": {"id": value}};
+    showCityInfo() {
+        var data = {"header": {}, "body": {"id": this.state.selectedValue}};
         fetch('/api/viewData/getCityDataTodayByMongodbId', {
             method: 'POST',
             mode: 'cors', // no-cors, *cors, same-origin
@@ -325,6 +326,15 @@ class App extends Component {
 
     }
 
+    /**
+     *下拉框选择触发函数
+     */
+    changeSelectedProince(value) {
+        this.setState({
+            selectedValue: value
+        })
+    }
+
     render() {
         const {Header, Footer, Content} = Layout;
         const columns = [
@@ -332,26 +342,31 @@ class App extends Component {
                 title: '地区',
                 dataIndex: 'cityName',
                 key: 'cityName',
+                align: 'center'
             },
             {
                 title: '确诊人数',
                 dataIndex: 'confirmedCount',
                 key: 'confirmedCount',
+                align: 'center'
             },
             {
                 title: '疑似人数(此数值未爬取成功)',
                 dataIndex: 'suspectedCount',
                 key: 'suspectedCount',
+                align: 'center'
             },
             {
                 title: '治愈人数',
                 dataIndex: 'curedCount',
                 key: 'curedCount',
+                align: 'center'
             },
             {
                 title: '死亡人数',
                 dataIndex: 'deadCount',
                 key: 'deadCount',
+                align: 'center'
             },
         ];
 
@@ -448,11 +463,13 @@ class App extends Component {
                                 <div id="mainMap" style={{width: '100vm', height: '70vh', marginTop: '20px'}}></div>
                                 <Divider style={{color: '#fff'}}></Divider>
                                 <div>
+                                    <Alert message="选择省份或自治区点击查询，查看有疫情数据的相关城市或地区" type="info"
+                                           style={{marginLeft: '10px', marginRight: '10px'}}/>
                                     <Select
-                                        style={{width: 200, marginLeft: '10px'}}
+                                        style={{width: 200, marginLeft: '10px', marginTop: '10px'}}
                                         placeholder="Select a province"
                                         optionFilterProp="children"
-                                        onChange={this.showCityInfo.bind(this)}
+                                        onChange={this.changeSelectedProince.bind(this)}
                                         /* onFocus={}
                                         onBlur={}
                                         onSearch={}*/
@@ -465,12 +482,16 @@ class App extends Component {
                                             </Select.Option>
                                         ))}
                                     </Select>
+                                    <Button type="primary" style={{marginLeft: '10px'}}
+                                            onClick={this.showCityInfo.bind(this)}>查询</Button>
                                 </div>
-                                <div style={{marginTop: '10px'}}>
+                                <div style={{marginTop: '10px', marginLeft: '10px', marginRight: '10px'}}>
                                     <Table border dataSource={this.state.hasData ? dataSource : null}
-                                           columns={columns}/>
+                                           columns={columns} bordered={true} locale={{emptyText: "暂无数据"}}
+                                           pagination={{size: 'small'}}/>
                                 </div>
                             </Content>
+                            <Divider style={{color: '#fff'}}></Divider>
                             <Footer style={{marginTop: '20px'}}>
                                 @wentao
                             </Footer>
