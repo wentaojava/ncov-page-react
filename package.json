@@ -47,9 +47,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ice-lab/react-materials/tree/master/scaffolds/ice-finance-dashboard"
   }
 }
