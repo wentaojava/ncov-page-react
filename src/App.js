@@ -142,6 +142,44 @@ class App extends Component {
                 show: false
             },
             baseOption: {
+                visualMap: {
+                    type: 'piecewise',
+                    pieces: [{
+                        min: 20000,
+                        color: colors[4]
+                    },
+                        {
+                            min: 1000,
+                            max: 1999,
+                            color: colors[3]
+                        },
+                        {
+                            min: 500,
+                            max: 999,
+                            color: colors[2]
+                        },
+                        {
+                            min: 100,
+                            max: 499,
+                            color: colors[1]
+                        },
+                        {
+                            min: 0,
+                            max: 99,
+                            color: colors[0]
+                        }
+                    ],
+                    orient: 'vertical',
+                    itemWidth: 25,
+                    itemHeight: 15,
+                    showLabel: true,
+                    seriesIndex: [0],
+                    textStyle: {
+                        color: '#7B93A7'
+                    },
+                    bottom: "20%",
+                    right: "10%",
+                },
                 geo: {
                     map: 'china',
                     left: "150px",
@@ -496,8 +534,8 @@ class App extends Component {
                                 </div>
                             </Content>
                             <Divider style={{color: '#fff'}}></Divider>
-                            <Footer style={{marginTop: '20px'}}>
-                                @wentao
+                            <Footer style={{marginTop: '20px', textAlign: 'center'}}>
+                                @made by wentao
                             </Footer>
                         </Layout>
                     </div>
