@@ -439,11 +439,14 @@ class App extends Component {
                             </Header>
                             <Content style={{marginTop: '20px'}}>
                                 <span style={{
-                                    marginLeft: '10%',
+                                    marginLeft: '1%',
                                     fontSize: 'small',
                                     color: 'red'
                                 }}>疑似人数数值，python没有爬取到，正在想办法获取</span>
-                                <span style={{marginLeft: '10%', fontSize: 'small'}}>数据来源于丁香园，与支付宝数据可能会有出入</span>
+                                <span style={{
+                                    marginLeft: '2%',
+                                    fontSize: 'small'
+                                }}>数据来源于丁香园；因为爬虫的设置，数据会有半小时的延迟，与支付宝数据可能会有出入</span>
                                 <span style={{marginLeft: '10%', fontSize: 'small'}}>感谢张学兵（前端大佬）给与的技术支持;</span>
                                 <Divider style={{color: '#fff'}}></Divider>
                                 <div style={{height: 'auto', marginTop: '20px', marginLeft: '50px'}}>
